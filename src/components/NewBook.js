@@ -28,6 +28,21 @@ export default function NewBook() {
     console.log("Title: " + title, " Author: " + author + " Rating: " + rating);
     setTitle("");
     setAuthor("");
+    insertBookToDb();
+  };
+
+  const insertBookToDb = () => {
+    const newBook = { title: title, author: author, rating: rating };
+    const bookData = JSON.stringify(newBook);
+
+    db.transaction((tx) => {
+      tx.executeSql(
+        "INSERT INTO books (book_data) VALUES (?);",
+        [bookData],
+        (tx, results) => console.log("Book inserted:", results.insertId),
+        (error) => console.log("Error inserting book:", error)
+      );
+    });
   };
 
   return (
