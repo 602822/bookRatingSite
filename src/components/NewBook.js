@@ -5,10 +5,12 @@ import { Paper } from "@mui/material";
 import { Button } from "@mui/material";
 import { useState } from "react";
 import ImageIcon from "@mui/icons-material/Image";
+import Rating from "@mui/material/Rating";
 
 export default function NewBook() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
+  const [rating, setRating] = useState(0);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -18,10 +20,15 @@ export default function NewBook() {
     setAuthor(e.target.value);
   };
 
+  const handleRatingChange = (e) => {
+    setRating(e.target.value);
+  };
+
   const handleAddBook = () => {
-    console.log("Title: " + title, "Author: " + author);
+    console.log("Title: " + title, "Author: " + author + "Rating: " + rating);
     setTitle("");
     setAuthor("");
+    setRating(0);
   };
 
   return (
@@ -59,10 +66,21 @@ export default function NewBook() {
         variant="contained"
         color="primary"
         endIcon={<ImageIcon></ImageIcon>}
-        sx={{ marginBottom: 10, width: "35%", alignSelf: "center" }}
+        sx={{ marginBottom: 2, width: "35%", alignSelf: "center" }}
       >
         Add Image
       </Button>
+      <Typography variant="h6" component="p">
+        {" "}
+        Rate the book 1-5:{" "}
+      </Typography>
+      <Rating
+        name="book-rating"
+        defaultValue={rating}
+        precision={0.5}
+        onChange={handleRatingChange}
+        sx={{ alignSelf: "center", marginBottom: 3 }}
+      ></Rating>
       <Button variant="contained" color="primary" onClick={handleAddBook}>
         Add Book
       </Button>
