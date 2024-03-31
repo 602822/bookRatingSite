@@ -25,10 +25,9 @@ export default function NewBook() {
   };
 
   const handleAddBook = () => {
-    console.log("Title: " + title, "Author: " + author + "Rating: " + rating);
+    console.log("Title: " + title, " Author: " + author + " Rating: " + rating);
     setTitle("");
     setAuthor("");
-    setRating(0);
   };
 
   return (
