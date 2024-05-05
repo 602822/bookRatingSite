@@ -1,28 +1,36 @@
 import "./App.css";
 import ResponsiveAppBar from "./components/AppBar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NewBook from "./components/NewBook";
 import BookList from "./components/BookList";
-import { fetchBooksFromDb } from "./database/util";
 import { CircularProgress } from "@mui/material";
+import dbPromise from "./database/indexedDb";
 
 function App() {
   const [activeMenuItem, setActiveMenuItem] = useState("Home");
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
-    // Fetch books from the database
-    fetchBooksFromDb()
-      .then((fetchedBooks) => {
-        setBooks(fetchedBooks);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching books:", error);
-        setLoading(false);
-      });
+   const fetchBooks = async () => {
+    try {
+      const db = await dbPromise;
+      const tx = db.transaction('myStore', 'readonly');
+      const store = tx.objectStore('myStore');
+      const books = await store.getAll();
+      setBooks(books);
+    } catch(error) {
+      console.error("Error fetching books: ", error);
+    } finally {
+      setLoading(false);
+    }
+    
+   };
+   fetchBooks();
   }, []); // Run this effect only once when the component mounts
+
+ 
 
   return (
     <div className="App">

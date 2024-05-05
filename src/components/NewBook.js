@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 import { useState } from "react";
 import ImageIcon from "@mui/icons-material/Image";
 import Rating from "@mui/material/Rating";
+import dbPromise from "../database/indexedDb";
 
 export default function NewBook() {
   const [title, setTitle] = useState("");
@@ -20,29 +21,22 @@ export default function NewBook() {
     setAuthor(e.target.value);
   };
 
-  const handleRatingChange = (e) => {
-    setRating(e.target.value);
-  };
+
 
   const handleAddBook = () => {
-    console.log("Title: " + title, " Author: " + author + " Rating: " + rating);
+    let book = {title: title, author: author, rating: rating}
     setTitle("");
     setAuthor("");
-    insertBookToDb();
+    setRating(0);
+    console.log(book);
+    addBook(book);
   };
 
-  const insertBookToDb = () => {
-    const newBook = { title: title, author: author, rating: rating };
-    const bookData = JSON.stringify(newBook);
-
-    db.transaction((tx) => {
-      tx.executeSql(
-        "INSERT INTO books (book_data) VALUES (?);",
-        [bookData],
-        (tx, results) => console.log("Book inserted:", results.insertId),
-        (error) => console.log("Error inserting book:", error)
-      );
-    });
+  const addBook = async (book) => {
+   const db = await dbPromise;
+   const tx = db.transaction('myStore','readwrite');
+   const store = tx.objectStore('myStore');
+   await store.put(book);
   };
 
   return (
@@ -90,9 +84,10 @@ export default function NewBook() {
       </Typography>
       <Rating
         name="book-rating"
-        defaultValue={rating}
-        precision={0.5}
-        onChange={handleRatingChange}
+        value={rating}
+        onChange={(event, newRating) => {
+          setRating(newRating);
+        }}
         sx={{ alignSelf: "center", marginBottom: 3 }}
       ></Rating>
       <Button variant="contained" color="primary" onClick={handleAddBook}>
