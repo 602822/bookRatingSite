@@ -1,21 +1,29 @@
 import React from "react";
 import Rating from "@mui/material/Rating";
-import Card from '@mui/material/Card';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import CardActions from '@mui/material/CardActions';
+import Card from "@mui/material/Card";
+import CardActionArea from "@mui/material/CardActionArea";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import CardActions from "@mui/material/CardActions";
 
 export default function Book({ bookCover, title, author, rating }) {
   return (
-    <Card>
+    <Card
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <CardActionArea>
         <CardMedia
           component="img"
           height="140"
           image={bookCover}
           alt="book cover"
+          width="500"
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
@@ -27,11 +35,7 @@ export default function Book({ bookCover, title, author, rating }) {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Rating
-          name="half-rating-read"
-          defaultValue={rating}
-          readOnly
-        />
+        <Rating name="half-rating-read" defaultValue={rating} readOnly />
       </CardActions>
     </Card>
   );
