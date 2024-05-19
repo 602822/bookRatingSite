@@ -20,10 +20,9 @@ export default function Book({ bookCover, title, author, rating }) {
       <CardActionArea>
         <CardMedia
           component="img"
-          height="200"
           src={bookCover}
           alt="book cover"
-          width="300"
+          sx={{ height: { xs: 300, md: 500 } }}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
