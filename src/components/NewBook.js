@@ -64,10 +64,16 @@ export default function NewBook() {
   };
 
   const addBook = async (book) => {
-    const db = await dbPromise;
-    const tx = db.transaction("myStore", "readwrite");
-    const store = tx.objectStore("myStore");
-    await store.put(book);
+    try {
+      const db = await dbPromise;
+      const tx = db.transaction("myStore", "readwrite");
+      const store = tx.objectStore("myStore");
+      await store.add(book);
+      await tx.complete;
+      console.log(`Book with id ${book.id} added successfully`);
+    } catch (error) {
+      console.log(`Error adding book with id:  ${book.id} error: `, error);
+    }
   };
 
   return (
