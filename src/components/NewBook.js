@@ -12,7 +12,7 @@ export default function NewBook() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [rating, setRating] = useState(0);
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null);
   const fileInputRef = useRef(null);
 
   const handleTitleChange = (e) => {
@@ -39,12 +39,22 @@ export default function NewBook() {
   };
 
   const handleAddBook = () => {
-    let book = {
-      bookCover: image,
-      title: title,
-      author: author,
-      rating: rating,
-    };
+    let book;
+    if (image) {
+      book = {
+        bookCover: image,
+        title: title,
+        author: author,
+        rating: rating,
+      };
+    } else {
+      book = {
+        title: title,
+        author: author,
+        rating: rating,
+      };
+    }
+
     setTitle("");
     setAuthor("");
     setRating(0);

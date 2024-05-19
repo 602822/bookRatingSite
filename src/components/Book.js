@@ -6,6 +6,7 @@ import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
+import PropTypes from "prop-types";
 
 export default function Book({ bookCover, title, author, rating }) {
   return (
@@ -39,3 +40,14 @@ export default function Book({ bookCover, title, author, rating }) {
     </Card>
   );
 }
+
+Book.prototype = {
+  bookCover: PropTypes.string,
+  title: PropTypes.string,
+  author: PropTypes.string,
+  rating: PropTypes.number,
+};
+
+Book.defaultProps = {
+  bookCover: "/static/images/noCover.png",
+};
