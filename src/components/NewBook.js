@@ -3,7 +3,7 @@ import { Typography } from "@mui/material";
 import { TextField } from "@mui/material";
 import { Paper } from "@mui/material";
 import { Button } from "@mui/material";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import ImageIcon from "@mui/icons-material/Image";
 import Rating from "@mui/material/Rating";
 import dbPromise from "../database/indexedDb";
@@ -12,6 +12,8 @@ export default function NewBook() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [rating, setRating] = useState(0);
+  const [image, setImage] = useState("");
+  const fileInputRef = useRef(null);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -21,22 +23,41 @@ export default function NewBook() {
     setAuthor(e.target.value);
   };
 
+  const handleSelectImage = (e) => {
+    fileInputRef.current.click();
+  };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleAddBook = () => {
-    let book = {title: title, author: author, rating: rating}
+    let book = {
+      bookCover: image,
+      title: title,
+      author: author,
+      rating: rating,
+    };
     setTitle("");
     setAuthor("");
     setRating(0);
+    setImage(null);
     console.log(book);
     addBook(book);
   };
 
   const addBook = async (book) => {
-   const db = await dbPromise;
-   const tx = db.transaction('myStore','readwrite');
-   const store = tx.objectStore('myStore');
-   await store.put(book);
+    const db = await dbPromise;
+    const tx = db.transaction("myStore", "readwrite");
+    const store = tx.objectStore("myStore");
+    await store.put(book);
   };
 
   return (
@@ -75,9 +96,17 @@ export default function NewBook() {
         color="primary"
         endIcon={<ImageIcon></ImageIcon>}
         sx={{ marginBottom: 2, width: "35%", alignSelf: "center" }}
+        onClick={handleSelectImage}
       >
         Add Image
       </Button>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageChange}
+        ref={fileInputRef}
+        style={{ display: "none" }}
+      ></input>
       <Typography variant="h6" component="p">
         {" "}
         Rate the book 1-5:{" "}
